@@ -1,9 +1,9 @@
 export const SAMPLE_VIDEO_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
 export const homeTexts: string[] = [
-  "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "Hi! I'm an Unreal Engine Developer with more than 3 years of experience using Unreal Engine",
+  "I’ve worked with most parts of Unreal and I’m always working on cool new projects, which include complex multiplayer systems, smooth gameplay mechanics, UI/UX and more!",
+  "Aside from the technical stuff, I also love to draw, enjoy good music and have a passion for video games !",
 ];
 
 export const workTexts: string[] = [
