@@ -1,9 +1,12 @@
-RUN :
-(install) : bun install
-(dev) : bun dev
+## Run
 
+```bash
+# install dependencies
+bun install
 
-folder structure :
+# start dev server
+bun dev
+
 app/
 ├── (web)/
 │   ├── layout.tsx
