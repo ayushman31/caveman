@@ -26,7 +26,7 @@ export default function WebLayout({
           <li>
             {/* YouTube Icon */}
             <a
-              href="YOUR_YOUTUBE_LINK"
+              href="https://www.youtube.com/@anshumansingh9794"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-red-600 transition-colors"
