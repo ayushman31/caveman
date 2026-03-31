@@ -13,6 +13,10 @@ const growthFeatureVideos = {
   systemsClip: null,
 } as const;
 
+const packFeatureVideos = {
+  struggle: null,
+} as const;
+
 const growthBreakdownItems = [
   "Core Growth Model",
   "Physical Scaling",
@@ -89,6 +93,127 @@ const growthClosingThoughts = {
   ],
   title: "Design Philosophy in Practice",
 } as const;
+
+const packSystemOverviewPoints = [
+  "Players can form groups, with one player being the leader of the group, also there's a space mechanic tied to player weight which limits how many creatures can be in a certain group.",
+  "There are group tiers, and the group leader enjoys some extra buff effects.",
+  "Because there are special buffs for the group leader, other members should be able to compete for the leadership position.",
+  "Players can also view their pack members on their minimaps and world maps.",
+] as const;
+
+const packSystemSolutionPoints = [
+  "I built a packs/groups system integrated with GAS that allows players to send invitations and respond to incoming pack invites.",
+  "The pack leadership competition mechanic allows group members to challenge for the leadership position through combat.",
+  "The struggle system also allows the involved players to surrender, minimizing the overall losses caused to the pack.",
+] as const;
+
+const packTechnicalBreakdown = [
+  "The Pack WorldSubsystem",
+  "The Pack Actor Component",
+  "Pack Struggle Gameplay Ability",
+] as const;
+
+const packSystemConnections = [
+  {
+    description:
+      "Packs and territories are tightly connected because groups need to contest, claim, and hold territory together. Territory ownership buffs also become more meaningful when tied to organized packs or factions rather than isolated players.",
+    title: "Connected to Territories",
+  },
+  {
+    description:
+      "Growth feeds directly into pack design through the space and weight rules, because smaller creatures can fit into larger groups while larger creatures change how a pack composes itself. That means Growth doesn't just affect the creature - it also affects group structure and multiplayer strategy.",
+    title: "Connected to Growth",
+  },
+] as const;
+
+const packFutureExtensions = {
+  description:
+    "This system also opens the door for future alliance mechanics, where different packs or factions can form alliances and control larger regions through multiple connected territories.",
+  title: "Future Alliance Possibilities",
+} as const;
+
+type PackComponentDetail = {
+  benefits?: string[];
+  description: string;
+  extraList?: string[];
+  extraTitle?: string;
+  flowQuestions?: {
+    answer: string;
+    question: string;
+  }[];
+  introLabel?: string;
+  introPoints?: string[];
+  roles: string[];
+  tag?: string;
+  title: string;
+};
+
+const packComponents: PackComponentDetail[] = [
+  {
+    benefits: [
+      "Keeps the actual pack information in the authoritative server state, components can fetch data or query it.",
+      "Prevents pack leadership and struggle outcomes from being resolved client-side.",
+      "Provides one central place for pack queries, validation, and global rule enforcement.",
+    ],
+    description:
+      "The authoritative pack management layer responsible for global pack state, leadership, and struggle resolution.",
+    roles: [
+      "Server-Only WorldSubsystem which stores global Pack Data, Pack Struggle Data (state info of all active pack struggles for leadership). It&apos;s the single source of truth for all packs state.",
+      "Has the internal implementations of critical pack management functions (such initializing, adding, removing, managing leadership etc.) and pack queries.",
+      "Validates pack creation, adding members, and starting pack struggles for leadership.",
+    ],
+    tag: "AUTHORITATIVE PACK STATE",
+    title: "Pack WorldSubsystem",
+  },
+  {
+    benefits: [
+      "Keeps player-facing pack functionality modular and easy to attach to any creature pawn.",
+      "Provides a clean bridge between replicated player state, UI, and the authoritative subsystem.",
+      "Makes map visibility, member tracking, and invitation flows easier to maintain per player.",
+    ],
+    description:
+      "Replicated Actor Component that lives on the player pawn.",
+    roles: [
+      "Handles Pack Invitations & Requests management, inviting and managing active requests.",
+      "Stores player pack state.",
+      "Manages Pack member widgets for all members of the pack, and updates the pack member locations on the minimap and world map.",
+      "Routes all critical logic to the PackSubsystem.",
+    ],
+    tag: "PLAYER PACK INTERFACE LAYER",
+    title: "Pack Actor Component",
+  },
+  {
+    description:
+      "Server-Initiated Replicated Gameplay Ability that gets granted by the Pack Subsystem.",
+    extraList: [
+      "Either Player surrenders.",
+      "Either Player dies in an active struggle.",
+    ],
+    extraTitle: "Pack Struggle ends in 2 ways",
+    flowQuestions: [
+      {
+        answer:
+          "When a player takes damage, the Ability System first checks whether the instigator is friendly (in the same pack). If true, it then checks whether the target is the current pack leader. If that is also true, the flow moves through PackComponent -> PackSubsystem, where the server validates whether the struggle can begin and then grants both players the PackStruggleGameplayAbility.",
+        question: "How does the struggle start?",
+      },
+      {
+        answer:
+          "While the struggle is active, if a player dies while holding the PackStruggleStateGameplayTag, the PackSubsystem's PlayerDiedInPackStruggle() function is executed. The subsystem then determines how leadership should be transferred based on the stored struggle state, applies the result, and clears the struggle state once the handoff is complete.",
+        question: "How does the struggle end?",
+      },
+    ],
+    introLabel: "Flow of events",
+    introPoints: [
+      "On activation, the defender and challenger are both granted the Pack Struggle state through gameplay tags.",
+    ],
+    roles: [
+      "Executes events on the player client side for UI updates on pack struggle (eg:- Press 'X' to give up the struggle and surrender).",
+      "Starts an event task on the server to listen for struggle end event (using gameplay tag events).",
+    ],
+    tag: "LEADERSHIP CONTEST FLOW",
+    title: "Pack Struggle Gameplay Ability",
+  },
+] as const;
 
 type TerritoryComponentDetail = {
   benefits?: string[];
@@ -319,7 +444,7 @@ export default async function FirstFeaturePage({
                   </p>
                 ) : null}
 
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className={component.title === "Pack Struggle Gameplay Ability" ? "block" : "grid gap-6 md:grid-cols-2"}>
                   <div>
                     {component.introPoints ? (
                       <>
@@ -607,6 +732,199 @@ export default async function FirstFeaturePage({
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
+          </div>
+        </section>
+      ) : null}
+
+      {slug === "pack-faction-system" ? (
+        <section className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8 md:px-6 md:py-12">
+          <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
+            <h2 className="mb-4 text-2xl font-semibold tracking-tight text-neutral-900">
+              System Goals
+            </h2>
+            <ul className="flex list-disc flex-col gap-4 pl-5 text-[1.02rem] leading-relaxed text-neutral-700 md:text-[1.08rem]">
+              {packSystemOverviewPoints.map((point) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
+            <h2 className="mb-4 text-2xl font-semibold tracking-tight text-neutral-900">
+              Gameplay Solution
+            </h2>
+            <ul className="flex list-disc flex-col gap-4 pl-5 text-[1.02rem] leading-relaxed text-neutral-700 md:text-[1.08rem]">
+              {packSystemSolutionPoints.map((point) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
+            <h2 className="mb-4 text-2xl font-semibold tracking-tight text-neutral-900">
+              Technical Breakdown
+            </h2>
+            <p className="mb-5 text-[1.02rem] leading-relaxed text-neutral-700 md:text-[1.08rem]">
+              This system works using 3 components.
+            </p>
+            <ol className="flex list-decimal flex-col gap-3 pl-6 text-[1.02rem] leading-relaxed text-neutral-700 md:text-[1.08rem]">
+              {packTechnicalBreakdown.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <h2 className="text-2xl font-semibold tracking-tight text-neutral-900">
+              Packs Demo
+            </h2>
+            {packFeatureVideos.struggle ? (
+              <Video videoUrl={packFeatureVideos.struggle} outlined />
+            ) : (
+              <div className="straight-outline straight-outline-video relative w-full overflow-hidden pt-[56.25%] bg-white/35">
+                <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm tracking-[0.08em] text-neutral-700/80">
+                  Video slot ready - add URL
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-6">
+            {packComponents.map((component) => (
+              <div
+                key={component.title}
+                className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm"
+              >
+                <h3 className="mb-3 text-xl font-semibold tracking-tight text-neutral-900 md:text-[1.4rem]">
+                  {component.title}
+                </h3>
+                <p className="mb-5 text-[1.02rem] leading-relaxed text-neutral-700 md:text-[1.08rem]">
+                  {component.description}
+                </p>
+
+                {component.tag ? (
+                  <div className="mb-5">
+                    <span className="w-fit border border-black/70 px-3 py-1 text-[0.72rem] font-semibold tracking-[0.08em] text-neutral-800">
+                      {component.tag}
+                    </span>
+                  </div>
+                ) : null}
+
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    {component.title !== "Pack Struggle Gameplay Ability" ? (
+                      <h4 className="mb-3 text-sm font-semibold tracking-[0.04em] text-neutral-900">
+                        {component.introLabel ?? "Core Responsibilities"}
+                      </h4>
+                    ) : null}
+                    <ul className="flex list-disc flex-col gap-3 pl-5 text-[1rem] leading-relaxed text-neutral-700">
+                      {component.roles.map((role) => (
+                        <li key={role}>{role}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {component.benefits ? (
+                    <div>
+                      <h4 className="mb-3 text-sm font-semibold tracking-[0.04em] text-neutral-900">
+                        Benefits
+                      </h4>
+                      <ul className="flex list-disc flex-col gap-3 pl-5 text-[1rem] leading-relaxed text-neutral-700">
+                        {component.benefits.map((benefit) => (
+                          <li key={benefit}>{benefit}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
+
+                {component.extraTitle && component.extraList ? (
+                  <div className="mt-6">
+                    <h4 className="mb-3 text-sm font-semibold tracking-[0.04em] text-neutral-900">
+                      {component.extraTitle}
+                    </h4>
+                    <ul className="flex list-disc flex-col gap-3 pl-5 text-[1rem] leading-relaxed text-neutral-700">
+                      {component.extraList.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+
+                {component.introPoints ? (
+                  <div className="mt-6 border border-black/10 px-4 py-4">
+                    {component.title === "Pack Struggle Gameplay Ability" ? (
+                      <div>
+                        <ul className="flex list-disc flex-col gap-3 pl-5 text-[1rem] leading-relaxed text-neutral-700">
+                          {component.introPoints.map((point) => (
+                            <li key={point}>{point}</li>
+                          ))}
+                        </ul>
+                        {component.flowQuestions ? (
+                          <div className="mt-5 flex flex-col gap-4">
+                            {component.flowQuestions.map((item) => (
+                              <div key={item.question} className="flex flex-col gap-1">
+                                <p className="font-semibold text-neutral-900">
+                                  {item.question}
+                                </p>
+                                <p className="text-[1rem] leading-relaxed text-neutral-700">
+                                  {item.answer
+                                    .split("PlayerDiedInPackStruggle()")
+                                    .map((part, index, array) => (
+                                      <span key={`${item.question}-${index}`}>
+                                        {part}
+                                        {index < array.length - 1 ? (
+                                          <span className="font-medium text-neutral-900">
+                                            PlayerDiedInPackStruggle()
+                                          </span>
+                                        ) : null}
+                                      </span>
+                                    ))}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <ul className="flex list-disc flex-col gap-3 pl-5 text-[1rem] leading-relaxed text-neutral-700">
+                        {component.introPoints.map((point) => (
+                          <li key={point}>{point}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </div>
+
+          <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
+            <h2 className="mb-6 text-2xl font-semibold tracking-tight text-neutral-900">
+              How it connects with the rest of the game
+            </h2>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              {packSystemConnections.map((item) => (
+                <div key={item.title} className="flex flex-col gap-3">
+                  <h3 className="text-lg font-semibold tracking-tight text-neutral-900">
+                    {item.title}
+                  </h3>
+                  <p className="text-[1rem] leading-relaxed text-neutral-700 md:text-[1.05rem]">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
+            <h2 className="mb-4 text-2xl font-semibold tracking-tight text-neutral-900">
+              {packFutureExtensions.title}
+            </h2>
+            <p className="text-[1.02rem] leading-relaxed text-neutral-700 md:text-[1.08rem]">
+              {packFutureExtensions.description}
+            </p>
           </div>
         </section>
       ) : null}
