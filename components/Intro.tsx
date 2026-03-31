@@ -34,6 +34,7 @@ export default function Intro() {
               alt="Profile photo"
               width={800}
               height={800}
+              unoptimized
               className="relative z-0 block aspect-square w-full rounded-none object-cover"
             />
             <div className="pointer-events-none absolute inset-x-0 bottom-4 z-10 flex justify-center px-4">
