@@ -1,15 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import "@fontsource/cooper-hewitt/400.css";
+import "@fontsource/cooper-hewitt/500.css";
+import "@fontsource/cooper-hewitt/600.css";
+import "@fontsource/cooper-hewitt/700.css";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const hkGrotesk = localFont({
+  src: [
+    {
+      path: "../node_modules/hk-grotesk/hkgrotesk-regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../node_modules/hk-grotesk/hkgrotesk-semibold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../node_modules/hk-grotesk/hkgrotesk-bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-hk-grotesk",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,11 +39,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${hkGrotesk.variable} h-full antialiased`}>
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
+        {children}
+      </body>
     </html>
   );
 }

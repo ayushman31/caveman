@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { FaYoutube, FaDiscord } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
@@ -16,10 +17,10 @@ export default function WebLayout({
   return (
     <div className="min-h-screen bg-[#f4f1eb]">
       {/* Shared Nav */}
-      <header className="sticky top-0 z-10 border-b border-neutral-200 bg-[#f4f1eb]/80 backdrop-blur-sm">
+      <header className="sticky top-0 z-10 border-b-2 border-black bg-[#f4f1eb]/88 shadow-[0_10px_24px_rgba(0,0,0,0.14)] backdrop-blur-sm">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 md:px-6">
         <span className="text-lg font-semibold tracking-tight text-neutral-900">
-          <a href="/">Caveman</a>
+          <Link href="/">Caveman</Link>
         </span>
         <ul className="flex items-center gap-6 text-sm font-medium text-neutral-600">
           <li>
