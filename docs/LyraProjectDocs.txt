@@ -1,0 +1,960 @@
+PocketTowne Technical Documentation
+===================================
+
+Project Scope
+-------------
+This document describes the PocketTowne gameplay architecture implemented across:
+
+- Core game module: Source/LyraGame
+- Game feature plugin: Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime
+
+PocketTowne extends Lyra by layering a custom RPG progression model, interactable stations,
+tool/resource gameplay, crafting, and a higher-level item identity system on top of Lyra's
+existing Gameplay Ability System (GAS), inventory, equipment, and messaging foundations.
+
+
+1. High-Level Architecture
+--------------------------
+
+1.1 Module Roles
+
+LyraGame
+- Primary gameplay module for the project.
+- Provides the core runtime that PocketTowne builds on: GAS integration, player state,
+  inventory definitions and instances, quick bar / equipment flows, gameplay messages,
+  and other Lyra systems.
+- PocketTowne-specific additions also exist directly inside this module, mainly to create
+  reusable data structures that both the base game and the game feature can depend on.
+
+PocketTowneCoreRuntime
+- Game feature runtime module for PocketTowne-specific systems.
+- Depends on LyraGame and extends it with:
+  - custom player ASC behavior
+  - player stat and skill attribute sets
+  - XP-to-points progression logic
+  - station interaction flows
+  - crafting ability flows
+  - resource gathering / tool targeting
+  - item asset identity fragments
+  - progression notification plumbing
+
+1.2 Module Startup Behavior
+
+Both module startup files are intentionally minimal:
+- Source/LyraGame/LyraGameModule.cpp
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/PocketTowneCoreRuntimeModule.cpp
+
+No major runtime registration is happening in StartupModule(). The real gameplay architecture is
+implemented through data assets, components, actors, attribute sets, and gameplay abilities.
+
+1.3 Dependency Direction
+
+The dependency direction is straightforward:
+
+LyraGame
+  -> base gameplay framework and reusable PocketTowne helper assets
+
+PocketTowneCoreRuntime
+  -> depends on LyraGame
+  -> plugs custom runtime systems into Lyra player state, ASC, inventory, and GAS
+
+
+2. Build / Dependency Overview
+------------------------------
+
+2.1 LyraGame Build Rules
+
+Source/LyraGame/LyraGame.Build.cs shows the project is built on top of a large Lyra/Unreal stack,
+including:
+- GameplayAbilities
+- GameplayTags
+- GameplayTasks
+- GameplayMessageRuntime
+- GameFeatures
+- DataRegistry
+- CommonGame / CommonUI / UMG
+- ModularGameplay / ModularGameplayActors
+
+This matters because PocketTowne does not reinvent these layers; it extends them.
+
+2.2 PocketTowneCoreRuntime Build Rules
+
+Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/PocketTowneCoreRuntime.Build.cs
+declares LyraGame as a direct public dependency. This is the primary integration seam.
+
+PocketTowneCoreRuntime also depends on:
+- GameplayAbilities / GameplayTags / GameplayTasks
+- GameplayMessageRuntime
+- DataRegistry
+- EnhancedInput
+- AIModule
+- CommonUI / UMG
+
+This confirms the plugin is a gameplay runtime module rather than a purely content-side feature.
+
+
+3. PocketTowne Additions Inside LyraGame
+----------------------------------------
+
+Although PocketTowneCoreRuntime is the main feature module, several important PocketTowne-specific
+types live directly in LyraGame so they can be shared broadly.
+
+3.1 UPTLyraAbilitySet
+Files:
+- Source/LyraGame/AbilitySystem/PTLyraAbilitySet.h
+- Source/LyraGame/AbilitySystem/PTLyraAbilitySet.cpp
+
+Purpose:
+- A PocketTowne-specific variant of Lyra's ability set concept.
+- Grants gameplay abilities, gameplay effects, and attribute sets to a Lyra ASC.
+- Tracks granted handles so those grants can later be revoked cleanly.
+
+Core structures:
+- FPTLyraAbilitySet_GameplayAbility
+  - ability class
+  - grant level
+  - input tag
+- FPTLyraAbilitySet_GameplayEffect
+  - gameplay effect class
+  - effect level
+- FPTLyraAbilitySet_AttributeSet
+  - attribute set class to instantiate and attach
+- FPTLyraAbilitySet_GrantedHandles
+  - stores granted ability handles
+  - stores active effect handles
+  - stores granted attribute set pointers
+  - supports TakeFromAbilitySystem() cleanup
+
+PocketTowne usage:
+- Station definitions grant one or more of these ability sets while the player is interacting
+  with a station.
+- Item definitions can also reference an ability set, giving item assets a direct gameplay hook.
+
+3.2 UPTItemDefinition
+Files:
+- Source/LyraGame/Inventory/PTItemDefinition.h
+- Source/LyraGame/Inventory/PTItemDefinition.cpp
+
+Purpose:
+- Defines a higher-level PocketTowne item asset above Lyra's runtime inventory definition.
+
+Stored data:
+- DisplayName
+- ItemMesh
+- AbilitySetToGrant
+- InventoryItemDefinition
+
+Design intent:
+- Separate "game item identity" from Lyra's lower-level runtime inventory class.
+- Let designers author stable item assets that can point to both presentation data and runtime
+  inventory behavior.
+
+3.3 Custom GAS Target Data Types
+Files:
+- Source/LyraGame/AbilitySystem/LyraGameplayAbilityTargetData_SkillReward.h
+- Source/LyraGame/AbilitySystem/LyraGameplayAbilityTargetData_CraftingReward.h
+
+Purpose:
+- Serialize PocketTowne reward payloads through GAS target data replication.
+
+FLyraGameplayAbilityTargetData_SkillReward carries:
+- BaseXPReward
+- MinSkillLevel
+- MaxSkillLevel
+- ItemTags
+- BaseItemRewardAmounts
+- BaseToolDurabilityLoss
+
+FLyraGameplayAbilityTargetData_CraftingReward extends that with:
+- OutputItemId
+- InputItems
+
+These structs are the transport layer between local player-side targeting / confirmation and the
+authoritative server-side reward path.
+
+
+4. Lyra Foundations PocketTowne Builds On
+-----------------------------------------
+
+4.1 Inventory Definition / Fragment Model
+
+Key Lyra files:
+- Source/LyraGame/Inventory/LyraInventoryItemDefinition.h
+- Source/LyraGame/Inventory/LyraInventoryItemInstance.h
+
+Lyra inventory is fragment-based:
+- inventory item definitions are classes
+- behavior/data is attached through fragments
+- item instances hold per-instance state and stat tag stacks
+
+PocketTowne relies heavily on this model rather than replacing it.
+
+4.2 Inventory Manager and Replication
+
+Key Lyra files:
+- Source/LyraGame/Inventory/LyraInventoryManagerComponent.h
+- Source/LyraGame/Inventory/LyraInventoryManagerComponent.cpp
+
+Role:
+- replicated inventory storage
+- add/remove/find/consume behavior
+- gameplay message broadcasting around inventory changes
+
+PocketTowne crafting consumes ingredients through this manager.
+
+4.3 Quick Bar / Equipment Flow
+
+Key Lyra files:
+- Source/LyraGame/Equipment/LyraQuickBarComponent.h
+- Source/LyraGame/Equipment/LyraQuickBarComponent.cpp
+
+Role:
+- owns player slot array
+- tracks active slot
+- equips / unequips active items
+
+PocketTowne crafting explicitly removes consumed ingredients from both the quick bar and the
+inventory manager to keep runtime state consistent.
+
+4.4 Item Stat Tags
+
+Key Lyra file:
+- Source/LyraGame/Inventory/InventoryFragment_SetStats.h
+
+Role:
+- seeds per-instance stat-tag values on item creation
+
+This remains relevant for PocketTowne item tuning such as durability-style or other stat-tag driven
+mechanics.
+
+
+5. Player Runtime Entry Point
+-----------------------------
+
+5.1 APTPlayerState
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Player/PTPlayerState.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/Player/PTPlayerState.cpp
+
+Purpose:
+- Replaces Lyra's default ability system component subobject with UPTAbilitySystemComponent.
+
+Key implementation detail:
+- Constructor uses SetDefaultSubobjectClass<UPTAbilitySystemComponent>(TEXT("AbilitySystemComponent"))
+
+Why this matters:
+- LyraPlayerState remains the host for the replicated ASC.
+- PocketTowne keeps Lyra's overall player-state architecture intact, but swaps in a custom ASC that
+  understands PocketTowne progression rules.
+
+
+6. PocketTowne Ability System Layer
+-----------------------------------
+
+6.1 UPTAbilitySystemComponent
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/PTAbilitySystemComponent.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/AbilitySystem/PTAbilitySystemComponent.cpp
+
+This is the progression brain of the PocketTowne runtime.
+
+Responsibilities:
+- reacts to skill XP gains
+- reacts to stat XP gains
+- converts XP into points using formulas
+- enforces max-skill caps
+- maps skills to relevant stats
+- maps stats back to relevant skills
+- applies follow-up gameplay effects for chained progression
+- exposes Blueprint multicast events for XP and point changes
+
+6.2 Progression Formulae
+
+Skill points are derived from XP using:
+- floor(sqrt(SkillXP / SkillPointsGrowthConstant))
+
+Stat points are derived from XP using:
+- floor(sqrt(StatXP / StatPointsGrowthConstant))
+
+Default constants in the ASC:
+- SkillPointsGrowthConstant = 25.0
+- StatPointsGrowthConstant = 50.0
+- SkillPointsPerStatPoint = 20.0
+
+This creates a non-linear progression curve where gaining higher levels requires progressively more XP.
+
+6.3 Skill-to-Stat Relevance Model
+
+UPTAbilitySystemComponent stores a designer-authored array of FStatRelevanceInfo entries:
+- SkillTag
+- StatRelevanceMap (stat gameplay tag -> relevance factor)
+
+Usage:
+- whenever a skill gains XP, relevant stats also gain XP via a gameplay effect
+- whenever a stat gains points, relevant skills gain MaxSkill capacity via another gameplay effect
+
+This is the core of the "deep data-driven progression" system: skills and stats are linked by tags
+and relevance factors rather than hard-coded 1:1 relationships.
+
+6.4 Skill XP Processing
+
+For each supported skill, the ASC has a dedicated handler:
+- OnMeleeXPGained
+- OnRangedXPGained
+- OnMagicXPGained
+- OnBlacksmithingXPGained
+- OnCarpentryXPGained
+- OnCookingXPGained
+- OnFishingXPGained
+- OnMiningXPGained
+- OnLumberjackingXPGained
+
+Each handler does the same pattern:
+1. broadcast a skill-XP event
+2. resolve relevant stats for that skill tag
+3. apply a StatXP gameplay effect with set-by-caller relevance values
+4. compute new skill points from XP
+5. if points increased and do not exceed MaxSkill, update the current skill attribute
+6. broadcast OnSkillPointsGainedEvent
+
+6.5 Stat XP Processing
+
+For each supported stat, the ASC has a handler:
+- OnStrengthXPGained
+- OnDexterityXPGained
+- OnIntelligenceXPGained
+- OnConstitutionXPGained
+- OnCharismaXPGained
+- OnWisdomXPGained
+
+Each handler:
+1. broadcasts a stat-XP event
+2. computes new stat points from the relevant XP track
+3. updates the stat if a point increase occurred
+4. calls StatPointsGained() with the corresponding stat gameplay tag
+
+6.6 Chained Progression Effects
+
+The ASC references two effect classes:
+- StatXPGameplayEffect
+- MaxSkillPointsGameplayEffect
+
+Flow:
+- skill XP gain -> apply StatXPGameplayEffect -> stat XP increases
+- stat point gain -> apply MaxSkillPointsGameplayEffect -> max skill caps increase
+
+This means progression is intentionally layered:
+- actions raise skill XP
+- skill XP indirectly grows stats
+- stats indirectly expand future skill potential
+
+
+7. Attribute Set Model
+----------------------
+
+7.1 UPTPlayerSkillsSet
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Attributes/PTPlayerSkillsSet.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/AbilitySystem/Attributes/PTPlayerSkillsSet.cpp
+
+Skill families represented:
+- combat: Melee, Ranged, Magic
+- crafting: Blacksmithing, Carpentry, Cooking
+- utility / gathering: Fishing, Mining, Lumberjacking
+
+For each skill the set stores:
+- current skill points
+- max skill points
+- skill XP
+
+Behavior:
+- current skill points are clamped to [0, MaxSkill]
+- XP values are clamped to 0 minimum
+- XP changes call back into UPTAbilitySystemComponent
+
+Replication model:
+- current skill values: owner-only replication
+- max skill values: owner-only replication
+- XP tracks: owner-only replication
+
+This indicates these values are treated as player-private progression state rather than public combat-state.
+
+7.2 UPTPlayerStatsSet
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Attributes/PTPlayerStatsSet.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/AbilitySystem/Attributes/PTPlayerStatsSet.cpp
+
+Stats represented:
+- Strength
+- Intelligence
+- Dexterity
+- Constitution
+- Charisma
+- Wisdom
+- MaxStatPoints
+
+Each stat also has a matching XP track.
+
+Behavior:
+- stat values clamp to [0, MaxStatPoints]
+- XP values clamp to 0 minimum
+- XP changes call into UPTAbilitySystemComponent stat handlers
+
+Replication model:
+- base stat values replicate to everyone
+- stat XP values replicate owner-only
+
+Interpretation:
+- point totals are gameplay-visible/shared
+- XP tracks are considered private progression internals
+
+7.3 Additional Attribute Sets
+
+PocketTowneCoreRuntime also includes additional attribute families for broader RPG support:
+- PTVitalsAttributeSet
+  - stamina / mana style resources
+- PTCombatAttributeSet
+  - damage, range, crit, accuracy, resistance, attack speed, aggro
+- PTPhysicalAttributeSet
+  - movement speed, carry weight
+- PTModifierAttributeSet
+  - regen/drain/buff length style modifiers
+- PTMetaAttributeSet
+  - luck, XP rate, loot modifier style meta values
+
+These sets make the progression model extensible beyond the currently implemented skill/stat loop.
+
+
+8. Gameplay Effect Calculations
+-------------------------------
+
+8.1 UPT_MMC_SkillXP
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Effects/Calculations/PT_MMC_SkillXP.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/AbilitySystem/Effects/Calculations/PT_MMC_SkillXP.cpp
+
+Purpose:
+- Calculates effective XP reward based on current skill XP and designer-authored bounds.
+
+Important behavior:
+- derives skill level as SkillXP / 1000.0
+- reads set-by-caller inputs:
+  - SetByCaller.Data.SkillLevel_LowerLimit
+  - SetByCaller.Data.SkillLevel_UpperLimit
+  - SetByCaller.Data.BaseXPReward
+- returns zero if player skill level is below lower limit
+- otherwise linearly decreases reward as player level approaches upper limit
+
+This supports level-window reward scaling for gathering and crafting actions.
+
+8.2 UPT_ExecCalc_StatXP
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Effects/Calculations/PT_ExecCalc_StatXP.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/AbilitySystem/Effects/Calculations/PT_ExecCalc_StatXP.cpp
+
+Purpose:
+- Converts skill XP deltas into stat XP deltas using set-by-caller relevance magnitudes.
+
+Important tags read from the spec:
+- PocketTowne.Data.SkillXP.Value
+- PocketTowne.Data.StatRelevance.Strength
+- PocketTowne.Data.StatRelevance.Intelligence
+- PocketTowne.Data.StatRelevance.Dexterity
+- PocketTowne.Data.StatRelevance.Constitution
+- PocketTowne.Data.StatRelevance.Charisma
+- PocketTowne.Data.StatRelevance.Wisdom
+
+Formula:
+- StatXPDelta = SkillXPDelta * RelevanceFactor * 0.1
+
+8.3 UPT_ExecCalc_MaxSkillPts
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Effects/Calculations/PT_ExecCalc_MaxSkillPts.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/AbilitySystem/Effects/Calculations/PT_ExecCalc_MaxSkillPts.cpp
+
+Purpose:
+- Converts stat-point gains into additive increases for MaxSkill attributes.
+
+Key behavior:
+- reads skill relevance set-by-caller values
+- multiplies relevance by ASC base reward (SkillPointsPerStatPoint)
+- applies a dampening constant when an existing MaxSkill value exceeds 500
+  - <= 500 max skill: 1.0 multiplier
+  - > 500 max skill: 0.5 multiplier
+
+This creates a soft progression slowdown at high max-skill ranges.
+
+8.4 UPT_ExecCalc_StatPts
+
+This execution calculation exists as a direct stat-point application helper and rounds out the
+progression pipeline when raw stat-point updates are needed from effects.
+
+
+9. Inventory Identity and Data-Driven Items
+-------------------------------------------
+
+9.1 UPTItemAssetFragment
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Inventory/Fragments/PTItemAssetFragment.h
+
+Purpose:
+- Attaches a stable FPrimaryAssetId to a Lyra inventory item definition.
+
+Why it matters:
+- Crafting recipes use FPrimaryAssetId keys, not raw item classes and not gameplay tags.
+- This gives PocketTowne a stable asset-addressable item identity layer.
+
+Resulting item model:
+- UPTItemDefinition = top-level item asset used for identity/presentation/gameplay hooks
+- ULyraInventoryItemDefinition = runtime inventory definition class
+- UPTItemAssetFragment = bridge that lets runtime inventory items be matched back to stable asset IDs
+
+9.2 Larger Inventory Context
+
+PocketTowne leverages Lyra's inventory manager and quick bar rather than creating a separate custom
+inventory storage implementation in the PocketTowneCore module. The extension point is the item data
+model and the gameplay that consumes it, especially crafting and tool use.
+
+
+10. Tool and Resource Gathering System
+--------------------------------------
+
+10.1 FSkillReward / FItemReward
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/PTSkillSystemTypes.h
+
+FItemReward contains:
+- ItemTag
+- BaseItemRewardAmount
+
+FSkillReward contains:
+- BaseXPReward
+- MinSkillLevel
+- MaxSkillLevel
+- ToolDurabilityLoss
+- ItemRewards
+
+This is the canonical data structure for action rewards in gathering-like systems.
+
+10.2 AResourceNodeBase
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Actors/Resources/ResourceNodeBase.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/Actors/Resources/ResourceNodeBase.cpp
+
+Purpose:
+- Represents a harvestable world actor.
+
+Stored state:
+- SkillReward data
+- optional ResourceRewardEffect
+- replicated Health
+
+Behavior:
+- replicated actor
+- destroys itself when Health reaches 0 on OnRep_Health
+
+Role in the system:
+- Acts as the world-side source of reward data consumed by tool abilities.
+
+10.3 UPTGameplayAbility_ToolBase
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Abilities/PTGameplayAbility_ToolBase.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/AbilitySystem/Abilities/PTGameplayAbility_ToolBase.cpp
+
+Purpose:
+- Base ability for tool actions such as harvesting / gathering interactions.
+
+Flow:
+1. ability activates and commits immediately
+2. binds a target-data callback delegate on the ASC
+3. StartToolTargeting() sets up AbilityTask_WaitGameplayEvent for a configured gameplay event tag
+4. when the event arrives, Blueprint performs the actual trace via PerformToolTrace()
+5. if the hit actor is AResourceNodeBase, its FSkillReward is copied into
+   FLyraGameplayAbilityTargetData_SkillReward
+6. target data is optionally sent to the server for replication
+7. reward data is converted back into FSkillReward and exposed to Blueprint via OnToolTargetDataReady()
+
+Design observations:
+- targeting and tracing are intentionally left to Blueprint
+- reward packaging / replication are handled in C++
+- the tool ability is generic and node-driven rather than hard-coded per profession
+
+
+11. Station and Interaction System
+----------------------------------
+
+11.1 APTStationBase
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Stations/PTStationBase.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/Stations/PTStationBase.cpp
+
+Purpose:
+- Base class for any interactable station actor.
+
+Important properties:
+- StationDefinition
+- InteractionRequiredTags
+- InteractionBlockedTags
+- CurrentInteractingActor (replicated)
+
+Important behavior:
+- TryInteract() validates occupancy and ASC tag requirements
+- BeginInteraction() sets current interactor and invokes server flow
+- Server_BeginInteraction() resolves the player's station manager and starts station interaction
+- EndInteraction() / Server_EndInteraction() terminate the interaction
+- multicast events trigger Blueprint callbacks for station start/end UX
+
+11.2 UPTInteractionManagerComponent
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Components/PTInteractionManagerComponent.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/Components/PTInteractionManagerComponent.cpp
+
+Purpose:
+- Player-side gateway for interaction logic.
+
+Responsibilities:
+- validates whether the owner can interact using gameplay tags on its ASC
+- tracks CurrentInteractionTarget
+- begins and ends station interactions via server + multicast RPCs
+
+Behavior summary:
+- CanInteract() checks blocked tags and required tags against the owner's ASC
+- TryInteractWithStation() validates the station and calls server begin interaction
+- EndInteractionWithStation() clears target state and calls server end interaction
+
+This component centralizes interaction permissions on the actor attempting the interaction.
+
+11.3 UPTStationDefinition
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Stations/PTStationDefinition.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/Stations/PTStationDefinition.cpp
+
+Purpose:
+- Data object describing what a station grants while in use.
+
+Stored data:
+- AbilitySetsToGrant
+- ActorsToSpawn
+
+Design intent:
+- Stations are mostly data-driven.
+- The actor itself is lightweight; behavior comes from the granted ability sets.
+
+11.4 UPTStationManagerComponent
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Stations/PTStationManagerComponent.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/Stations/PTStationManagerComponent.cpp
+
+Purpose:
+- Tracks the player's active station and manages temporary grants.
+
+ActiveStation stores:
+- StationRef
+- StationDefinition
+- GrantedHandles (authority-only)
+
+Begin flow:
+1. store active station reference and definition
+2. read station definition CDO
+3. resolve owner ASC
+4. grant every UPTLyraAbilitySet in AbilitySetsToGrant using the station actor as SourceObject
+
+End flow:
+1. resolve owner ASC
+2. revoke all granted handles
+3. clear ActiveStation
+
+This is the key lifecycle manager that makes station interaction meaningful.
+
+11.5 UPTGameplayAbility_StationBase
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Stations/PTGameplayAbility_StationBase.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/Stations/PTGameplayAbility_StationBase.cpp
+
+Purpose:
+- Base class for abilities granted by stations.
+
+Role:
+- resolves the station actor from the ability spec SourceObject
+- caches station actor / definition for derived station abilities
+
+This makes station-granted abilities context-aware without hard references.
+
+11.6 PTCraftingStationBase
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Crafting/Stations/PTCraftingStationBase.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/Crafting/Stations/PTCraftingStationBase.cpp
+
+Purpose:
+- Thin concrete station actor for crafting use cases.
+- Primarily adds actor/mesh presence; behavior still comes from granted abilities and data.
+
+
+12. Crafting System
+-------------------
+
+12.1 Crafting Data Schema
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Crafting/PTCraftingSystemTypes.h
+
+FPTCraftingRecipe
+- TMap<FPrimaryAssetId, int32> RequiredIngredients
+
+FCraftingItemRow
+- OutputItemId
+- CraftingRecipe
+- CraftingSkillReward
+- CraftingRequiredTags
+- CraftingBlockedTags
+
+UCraftingItemPayload
+- carries a DataTable reference and row name
+- ResolveCraftingItem() returns the row definition
+
+This makes crafting fully data-table driven.
+
+12.2 UPTGameplayAbility_CraftingBase
+Files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Abilities/PTGameplayAbility_CraftingBase.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Private/AbilitySystem/Abilities/PTGameplayAbility_CraftingBase.cpp
+
+Purpose:
+- Base ability for crafting workflows, typically granted while using a crafting station.
+
+Core activation pattern:
+1. ability activates through station context
+2. locally controlled instance waits for a confirmation gameplay event (EventTagToWaitFor)
+3. authoritative instance binds a target-data listener
+4. OnCraftingConfirmed() resolves the payload, validates recipe data, consumes ingredients,
+   packages crafting reward target data, and forwards it into TargetDataReadyCallback()
+5. TargetDataReadyCallback() commits the ability, optionally forwards target data to the server,
+   reconstructs FSkillReward + crafted item ID + recipe info, and invokes
+   Blueprint event OnCraftingTargetDataReady()
+
+12.3 Ingredient Consumption Logic
+
+ConsumeCraftingIngredients() does the following:
+- resolves PlayerController from the avatar pawn
+- finds ULyraInventoryManagerComponent and ULyraQuickBarComponent on the controller
+- scans every inventory item instance
+- reads UPTItemAssetFragment from each item definition instance
+- matches ItemAssetId against recipe ingredient asset IDs
+- verifies sufficient counts exist for each ingredient
+- if satisfied, removes the correct number of items from both quick bar and inventory manager
+
+Important design detail:
+- recipe matching is done by FPrimaryAssetId, not by gameplay tag and not directly by item class
+
+12.4 Reward Packaging
+
+Crafting reward target data includes:
+- copied skill reward info
+- crafted output asset ID
+- input ingredient map
+
+This allows Blueprint or server-side follow-up logic to know both what was crafted and what cost was paid.
+
+
+13. Data-Driven Progression Characteristics
+-------------------------------------------
+
+PocketTowne's progression system is strongly data-driven in several ways:
+
+- skill/stat relationships are authored through gameplay tags and relevance maps
+- skill reward payloads are plain structs suitable for tables and serialization
+- crafting recipes are data-table rows keyed by asset IDs
+- station behavior is assembled by data definitions that grant ability sets
+- top-level items are primary assets, not just raw classes
+
+This gives the project a flexible content-authoring model where most progression tuning can happen
+without rewriting core system code.
+
+
+14. Notifications and Progression UX
+------------------------------------
+
+Relevant files:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/MessageProcessors/PT_XPGained_NotificationProcessor.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/MessageProcessors/PT_LevelUp_NotificationProcessor.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Accolades/PTAccoladeDefinition.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Accolades/PTAccoladeHostWidget.h
+
+Purpose:
+- translate progression-related messages into UI-facing notifications / accolade displays
+- provide a PocketTowne-specific feedback layer on top of Lyra's messaging and UI systems
+
+Although these systems are not the main progression logic, they are the primary UX surface for XP and
+level-up events.
+
+
+15. End-to-End Runtime Flows
+----------------------------
+
+15.1 Skill Gain Flow
+
+1. Player performs an action through a gameplay ability.
+2. Action produces a reward payload (tool hit, crafting confirmation, etc.).
+3. Reward gameplay effect adds skill XP.
+4. UPTPlayerSkillsSet::PostGameplayEffectExecute detects the XP attribute change.
+5. It calls the appropriate UPTAbilitySystemComponent skill XP handler.
+6. ASC computes new skill points and applies chained stat XP effect.
+7. Related stats gain XP and may gain stat points.
+8. Stat point gain applies MaxSkill growth to related skills.
+
+15.2 Gathering Flow
+
+1. Tool ability activates.
+2. Gameplay event triggers targeting.
+3. Blueprint trace identifies a resource node.
+4. Node's FSkillReward is copied into target data.
+5. Target data is optionally replicated to the server.
+6. Ability reconstructs reward data and exposes it to Blueprint.
+7. Gameplay effect / Blueprint logic applies skill XP and item rewards.
+
+15.3 Station Interaction Flow
+
+1. Player attempts interaction through UPTInteractionManagerComponent.
+2. Owner ASC is checked for required and blocked tags.
+3. Station interaction begins on the server.
+4. UPTStationManagerComponent stores active station state.
+5. Station definition grants one or more UPTLyraAbilitySet objects to the player's ASC.
+6. Station-granted abilities execute with the station actor as SourceObject.
+7. Ending the interaction revokes all temporary grants.
+
+15.4 Crafting Flow
+
+1. Player is using a crafting station.
+2. Station manager has already granted crafting ability sets to the player's ASC.
+3. Crafting ability waits for a confirmation gameplay event containing UCraftingItemPayload.
+4. The payload resolves a row in a crafting data table.
+5. Ingredient counts are validated against inventory item asset IDs.
+6. Matching ingredients are removed from inventory and quick bar.
+7. Crafting reward target data is assembled.
+8. Ability commits and forwards result data to Blueprint for reward/output handling.
+
+
+16. Networking and Replication Notes
+------------------------------------
+
+The implementation makes significant use of Unreal replication and GAS prediction patterns.
+
+Observed replication strategy:
+- station actors replicate active user reference
+- interaction manager replicates current target
+- station manager replicates active station owner-only
+- resource nodes replicate health
+- many progression values replicate owner-only where they are considered private state
+
+Observed RPC / GAS communication patterns:
+- server RPCs for interaction begin/end
+- multicast RPCs for station interaction feedback
+- GAS target data replication for tool and crafting reward payloads
+
+This design is suitable for authoritative multiplayer, with the player doing local targeting / UI work
+while the server remains the main state authority.
+
+
+17. Notable Implementation Gaps / Risks
+---------------------------------------
+
+17.1 Crafting server validation TODO
+
+In PTGameplayAbility_CraftingBase.cpp there is an explicit TODO for server-side checks in
+TargetDataReadyCallback(). This means the current crafting confirmation path still needs stronger
+authoritative validation of the claimed reward/input payload.
+
+17.2 Tool server validation TODO
+
+In PTGameplayAbility_ToolBase.cpp there is a similar TODO for server-side checks after target data
+arrives. The payload transport path exists, but final anti-cheat / authority validation is not yet
+fully built out.
+
+17.3 Station manager replication callback is empty
+
+UPTStationManagerComponent::OnRep_ActiveStation() is currently empty. The state replicates, but there
+is no client-side reaction logic yet for active station changes.
+
+17.4 Inventory manager existing-instance path in Lyra
+
+Lyra inventory still contains an unimplemented path for adding an existing ULyraInventoryItemInstance
+directly. If PocketTowne later leans more heavily on moving whole item instances around, this may need
+to be completed.
+
+
+18. Recommended Mental Model For The Codebase
+---------------------------------------------
+
+The easiest way to understand the PocketTowne gameplay architecture is:
+
+- LyraGame provides the engine room:
+  GAS host, item definitions, item instances, inventory, quick bar, equipment, player state,
+  and gameplay messaging.
+
+- PocketTowneCoreRuntime provides the rule layer:
+  what stats mean, what skills mean, how XP converts into progression, how stations grant temporary
+  capabilities, how crafting consumes items, and how tools extract rewards from the world.
+
+- Data assets and gameplay tags provide the tuning surface:
+  item assets, station definitions, crafting data tables, relevance maps, and reward rows.
+
+
+19. Key File Index
+------------------
+
+Core module entry:
+- Source/LyraGame/LyraGame.Build.cs
+- Source/LyraGame/LyraGameModule.cpp
+
+PocketTowne additions inside LyraGame:
+- Source/LyraGame/AbilitySystem/PTLyraAbilitySet.h
+- Source/LyraGame/Inventory/PTItemDefinition.h
+- Source/LyraGame/AbilitySystem/LyraGameplayAbilityTargetData_SkillReward.h
+- Source/LyraGame/AbilitySystem/LyraGameplayAbilityTargetData_CraftingReward.h
+
+Player / ASC:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Player/PTPlayerState.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/PTAbilitySystemComponent.h
+
+Progression attribute sets:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Attributes/PTPlayerSkillsSet.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Attributes/PTPlayerStatsSet.h
+
+Effect calculations:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Effects/Calculations/PT_MMC_SkillXP.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Effects/Calculations/PT_ExecCalc_StatXP.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Effects/Calculations/PT_ExecCalc_MaxSkillPts.h
+
+Stations / interaction:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Stations/PTStationBase.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Components/PTInteractionManagerComponent.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Stations/PTStationManagerComponent.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Stations/PTStationDefinition.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Stations/PTGameplayAbility_StationBase.h
+
+Crafting:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Crafting/PTCraftingSystemTypes.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Abilities/PTGameplayAbility_CraftingBase.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Inventory/Fragments/PTItemAssetFragment.h
+
+Gathering / tools:
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/PTSkillSystemTypes.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/AbilitySystem/Abilities/PTGameplayAbility_ToolBase.h
+- Plugins/GameFeatures/PocketTowneCore/Source/PocketTowneCoreRuntime/Public/Actors/Resources/ResourceNodeBase.h
+
+
+20. Final Summary
+-----------------
+
+PocketTowne is architected as a layered extension of Lyra rather than a fork that replaces Lyra's
+core patterns. The implementation is strongest in these areas:
+
+- modular GAS-based progression
+- data-driven skill/stat relationships
+- station-granted temporary gameplay capabilities
+- crafting based on stable item asset identities
+- reusable tool/resource reward transport through GAS target data
+
+The current architecture is flexible and scalable because most gameplay relationships are defined by
+data assets, tables, and gameplay tags. The most important future hardening work is server-side
+validation for crafting and tool target data, plus optional client reaction improvements for replicated
+station state.

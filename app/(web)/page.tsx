@@ -11,10 +11,10 @@ export default function HomePage() {
     "Interconnected, data-driven systems-from territories and factions to growth-designed to work together and add depth to gameplay.",
   ];
   const gameplayTexts = [
-    "Responsive, polished combat and movement systems built with modular frameworks, allowing fine control over gameplay feel and direction.",
+    "Responsive combat and movement systems built on strong gameplay architecture, combining polished player feel with reusable GAS-driven frameworks for scalable mechanic design.",
   ];
   const multiplayerTexts = [
-    "Multiplayer systems built for scale, including a footprint tracking system designed for 50-100 player environments, with a focus on replication and performance.",
+    "Scalable multiplayer architecture covering replication strategy, relevance-driven world systems, and the shared gameplay foundations that support complex networked mechanics.",
   ];
   const experimentalTexts = [
     "Pushing into advanced Unreal Engine systems-from Mover-based locomotion to extending Lyra with full RPG-style mechanics-applied in real gameplay scenarios, bridging experimentation with production-ready implementation.",
@@ -55,7 +55,7 @@ export default function HomePage() {
           title="Multiplayer & Performance"
           texts={multiplayerTexts}
           footerLabel="Includes:"
-          footerText="Footprint Tracking · Replication Strategy · GAS Integration"
+          footerText="Footprint Tracking · Replication Strategy · Networked Architecture"
         />
       }
       url="/third"

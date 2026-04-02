@@ -38,7 +38,7 @@ export const categoryPages = {
   },
   second: {
     description:
-      "Responsive, polished combat and movement systems built with modular frameworks, allowing fine control over gameplay feel and direction.",
+      "Responsive combat and movement systems built on strong gameplay architecture, combining polished player feel with reusable GAS-driven frameworks for scalable mechanic design.",
     features: [
       {
         description:
@@ -54,7 +54,7 @@ export const categoryPages = {
       },
       {
         description:
-          "A flexible gameplay ability architecture supporting cooldowns, effects, and extensible mechanics, designed for rapid iteration and designer control.",
+          "My approach to building gameplay mechanics with GAS, focused on strong core architecture, reusable ability patterns, and systems that scale cleanly across complex projects.",
         slug: "ability-system-framework",
         title: "Ability System Framework",
       },
@@ -63,25 +63,25 @@ export const categoryPages = {
   },
   third: {
     description:
-      "Multiplayer systems built for scale, including a footprint tracking system designed for 50-100 player environments, with a focus on replication and performance.",
+      "Scalable multiplayer architecture covering replication strategy, relevance-driven world systems, and the shared gameplay foundations that support complex networked mechanics.",
     features: [
       {
         description:
-          "A performant tracking system designed for 50-100 player environments, featuring footprints and scent trails optimized for scalability and network efficiency.",
+          "A relevance-driven tracking system for large multiplayer environments, using efficient footprint and world-tracking logic to support readable gameplay without excessive network cost.",
         slug: "footprint-tracking-system",
         title: "Footprint Tracking System",
       },
       {
         description:
-          "A structured approach to multiplayer system design, balancing server authority, responsiveness, and bandwidth efficiency.",
+          "My approach to replication design, focused on server authority, relevance filtering, and intentional data flow to keep multiplayer systems scalable and predictable.",
         slug: "replication-strategy",
         title: "Replication Strategy",
       },
       {
         description:
-          "Deep integration of GAS across systems, enabling scalable ability logic, attribute-driven gameplay, and clean interaction between mechanics.",
-        slug: "gas-integration",
-        title: "GAS Integration",
+          "How I connect abilities, replication, data-driven design, and game-wide systems into a shared gameplay architecture built for long-term multiplayer development.",
+        slug: "multiplayer-gameplay-architecture",
+        title: "Multiplayer Gameplay Architecture",
       },
     ],
     title: "Multiplayer & Performance",
@@ -98,7 +98,7 @@ export const categoryPages = {
       },
       {
         description:
-          "Extending Lyra with RPG-style systems including skills, stats, and progression, building on its modular architecture to support deeper gameplay layers.",
+          "A modular RPG extension built on top of Lyra, covering progression, crafting, stations, gathering, and the multiplayer architecture behind those systems.",
         slug: "lyra-rpg-systems",
         title: "Lyra RPG Systems",
       },
