@@ -170,13 +170,13 @@ export default function HomePage() {
   return (
     <>
       {/* intor */}
-      <div className="mx-auto max-w-5xl px-4 pt-16 pb-4 md:px-6 md:pt-10">
-      <Intro/>
-      
+      <div className="mx-auto max-w-5xl px-4 pt-10 pb-1 md:px-6 md:pt-6">
+       <Intro/>
+        
       </div>
 
       {/* intro video */}
-      <div className="mx-auto max-w-5xl px-4 pt-4 pb-4 md:px-6 md:pt-4">
+      <div className="mx-auto max-w-5xl px-4 pt-2 pb-4 md:px-6 md:pt-2">
         <Video videoUrl={heroVideoUrl} outlined />
       </div>
 
