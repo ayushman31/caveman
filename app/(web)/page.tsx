@@ -228,79 +228,79 @@ export default function HomePage() {
       </div>
 
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 pt-1 pb-5 md:px-6 md:pb-6">
-        <div className="straight-outline bg-white/45 px-6 py-5 backdrop-blur-sm">
+        <div className="straight-outline bg-white/32 px-6 py-5 backdrop-blur-sm">
           <p className="mb-2 text-[0.76rem] font-semibold tracking-[0.12em] text-neutral-700/75 uppercase">
             Studio Projects
           </p>
           <h2 className="text-[1.55rem] font-semibold tracking-tight text-neutral-900 md:text-[1.7rem]">
             Highlighted work from larger real-world game projects.
           </h2>
-        </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {studioProjects.map((project) => {
-            const isExternal = project.href.startsWith("http");
-            const className =
-              "straight-outline bg-white/50 px-5 py-5 backdrop-blur-sm transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#fbf5e8]/95 hover:shadow-[0_10px_22px_rgba(180,156,112,0.12)]";
+          <div className="mt-5 grid gap-4 border-t border-black/10 pt-5 md:grid-cols-2">
+            {studioProjects.map((project) => {
+              const isExternal = project.href.startsWith("http");
+              const className =
+                "straight-outline [--outline-thickness:0.4px] bg-white/50 px-5 py-5 backdrop-blur-sm transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#fbf5e8]/95 hover:shadow-[0_10px_22px_rgba(180,156,112,0.12)]";
 
-            const content = (
-              <>
-                <div className={`mb-4 overflow-hidden border border-black/15 ${project.imageBackgroundClass}`}>
-                  <div className="relative aspect-[16/9] w-full">
-                    <Image
-                      src={project.imageSrc}
-                      alt={project.imageAlt}
-                      fill
-                      className={project.imageClassName}
-                    />
+              const content = (
+                <>
+                  <div className={`mb-4 overflow-hidden border border-black/15 ${project.imageBackgroundClass}`}>
+                    <div className="relative aspect-[16/9] w-full">
+                      <Image
+                        src={project.imageSrc}
+                        alt={project.imageAlt}
+                        fill
+                        className={project.imageClassName}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="mb-3 flex flex-wrap items-center gap-2">
-                  <h3 className="text-xl font-semibold tracking-tight text-neutral-900">
-                    {project.title}
-                  </h3>
-                  {project.badge ? (
-                    <span className="inline-flex items-center gap-1 border border-[#1b2838]/25 bg-[#1b2838]/8 px-2 py-1 text-[0.68rem] font-semibold tracking-[0.1em] text-[#1b2838] uppercase">
-                      <FaSteam className="h-3 w-3" />
-                      {project.badge}
-                    </span>
-                  ) : null}
-                </div>
-                <p className="mb-4 text-[0.98rem] leading-relaxed text-neutral-700">
-                  {project.description}
-                </p>
-                <p className="mb-2 text-[0.76rem] font-semibold tracking-[0.08em] text-neutral-700/75">
-                  What I worked on in this
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="border border-black/15 bg-white/55 px-2 py-1 text-[0.72rem] font-medium tracking-[0.04em] text-neutral-700"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </>
-            );
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <h3 className="text-xl font-semibold tracking-tight text-neutral-900">
+                      {project.title}
+                    </h3>
+                    {project.badge ? (
+                      <span className="inline-flex items-center gap-1 border border-[#1b2838]/25 bg-[#1b2838]/8 px-2 py-1 text-[0.68rem] font-semibold tracking-[0.1em] text-[#1b2838] uppercase">
+                        <FaSteam className="h-3 w-3" />
+                        {project.badge}
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className="mb-4 text-[0.98rem] leading-relaxed text-neutral-700">
+                    {project.description}
+                  </p>
+                  <p className="mb-2 text-[0.76rem] font-semibold tracking-[0.08em] text-neutral-700/75">
+                    What I worked on in this
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="border border-black/15 bg-white/55 px-2 py-1 text-[0.72rem] font-medium tracking-[0.04em] text-neutral-700"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              );
 
-            return isExternal ? (
-              <a
-                key={project.title}
-                href={project.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={className}
-              >
-                {content}
-              </a>
-            ) : (
-              <Link key={project.title} href={project.href} className={className}>
-                {content}
-              </Link>
-            );
-          })}
+              return isExternal ? (
+                <a
+                  key={project.title}
+                  href={project.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                >
+                  {content}
+                </a>
+              ) : (
+                <Link key={project.title} href={project.href} className={className}>
+                  {content}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -335,26 +335,26 @@ export default function HomePage() {
           <h2 className="text-[1.65rem] font-semibold tracking-tight text-neutral-900 md:text-[1.8rem]">
             Four projects that best represent the range of the work.
           </h2>
-        </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {featuredWork.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="straight-outline bg-white/50 px-5 py-5 backdrop-blur-sm transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#fbf5e8]/95 hover:shadow-[0_10px_22px_rgba(180,156,112,0.12)]"
-            >
-              <p className="mb-3 text-[0.72rem] font-semibold tracking-[0.12em] text-neutral-700/75 uppercase">
-                {item.category}
-              </p>
-              <h3 className="mb-3 text-xl font-semibold tracking-tight text-neutral-900">
-                {item.title}
-              </h3>
-              <p className="text-[0.98rem] leading-relaxed text-neutral-700">
-                {item.description}
-              </p>
-            </Link>
-          ))}
+          <div className="mt-5 grid gap-4 border-t border-black/10 pt-5 md:grid-cols-2">
+            {featuredWork.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="straight-outline bg-white/50 px-5 py-5 backdrop-blur-sm transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#fbf5e8]/95 hover:shadow-[0_10px_22px_rgba(180,156,112,0.12)]"
+              >
+                <p className="mb-3 text-[0.72rem] font-semibold tracking-[0.12em] text-neutral-700/75 uppercase">
+                  {item.category}
+                </p>
+                <h3 className="mb-3 text-xl font-semibold tracking-tight text-neutral-900">
+                  {item.title}
+                </h3>
+                <p className="text-[0.98rem] leading-relaxed text-neutral-700">
+                  {item.description}
+                </p>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
