@@ -1,5 +1,15 @@
 import Image from "next/image";
 
+const skillBullets = [
+  "Gameplay architecture and GAS",
+  "Multiplayer replication and gameplay systems",
+  "Data-driven workflows and progression systems",
+  "UI/UX with UMG and Photoshop",
+  "AI and Behavior Trees",
+  "Some experience with Niagara System",
+] as const;
+
+/*
 const introCards = [
   {
     description:
@@ -13,7 +23,7 @@ const introCards = [
   },
   {
     description:
-      "Gameplay architecture, GAS, replication, data-driven workflows, progression systems, UI/UX with UMG and Photoshop, AI and Behavior Trees, some Niagara System experience, and polished mechanics that still scale cleanly under the hood.",
+      "Most projects sit somewhere between mechanic design, systems architecture, and giving the rest of the project cleaner tools and structure to build on.",
     title: "What I Work On",
   },
   {
@@ -22,6 +32,7 @@ const introCards = [
     title: "Beyond Programming",
   },
 ] as const;
+*/
 
 export default function Intro() {
   return (
@@ -76,23 +87,20 @@ export default function Intro() {
         </div>
 
         <div className="straight-outline flex flex-col justify-center bg-white/42 px-6 py-5 backdrop-blur-sm md:px-7 md:py-5">
-          <p className="mb-3 text-[0.76rem] font-semibold tracking-[0.14em] text-neutral-700/75 uppercase">
-            Building gameplay and multiplayer systems in Unreal Engine
-          </p>
           <p className="text-outer-glow text-[1.2rem] leading-[1.42] text-neutral-900 md:text-[1.32rem]">
             I love working on systems-heavy gameplay: gameplay
             architecture, GAS, replication, data-driven design, and polished
             mechanics that feel good to play while still scaling cleanly under
             the hood.
           </p>
-          <p className="mt-3 text-[1rem] leading-relaxed text-neutral-700 md:text-[1.05rem]">
-            A lot of the enjoyment comes from finding that balance between
-            strong player feel, clean technical structure, and giving the
-            wider project room to iterate and grow.
-          </p>
+          <ul className="mt-3 grid list-disc gap-x-6 gap-y-1 pl-5 text-[0.9rem] leading-[1.45] text-neutral-700 md:grid-cols-2 md:text-[0.95rem]">
+            {skillBullets.map((skill) => (
+              <li key={skill}>{skill}</li>
+            ))}
+          </ul>
         </div>
       </div>
-
+      {/*
       <div className="grid gap-3 md:grid-cols-2">
         {introCards.map((card) => (
           <div
@@ -108,6 +116,7 @@ export default function Intro() {
           </div>
         ))}
       </div>
+      */}
     </section>
   );
 }

@@ -5,6 +5,7 @@ import MultiText from "@/components/MultiText";
 import Video from "@/components/Video";
 import Image from "next/image";
 import Link from "next/link";
+import { FaSteam } from "react-icons/fa";
 
 const categoryCardImages = {
   experimental: "/Experimental&Advanced.png",
@@ -41,6 +42,52 @@ const featuredWork = [
       "A modular RPG extension on Lyra covering progression, crafting, gathering, and multiplayer-facing runtime architecture.",
     href: "/fourth/lyra-rpg-systems",
     title: "Lyra RPG Systems",
+  },
+] as const;
+
+const studioProjects = [
+  {
+    badge: "Steam",
+    description:
+      "Open-world multiplayer creature survival built around prehistoric species, bloodlines, bosses, and evolving sci-fi survival systems.",
+    href: "https://store.steampowered.com/app/2374990/Primeval_Horizon/",
+    imageBackgroundClass: "bg-white/40",
+    imageAlt: "Primeval Horizon Steam header artwork",
+    imageClassName: "object-cover object-bottom",
+    imageSrc: "/primeval-horizon-steam.jpg",
+    tags: [
+      "Territory Systems",
+      "Growth System",
+      "Pack Mechanics",
+      "Pounce Mechanics",
+      "Footprint Tracking",
+      "Replication",
+      "Gameplay Systems",
+      "Multiplayer Architecture",
+    ],
+    title: "Primeval Horizon",
+  },
+  {
+    badge: "Coming soon to Steam",
+    description:
+      "A wizard combat project focused on responsive locomotion, readable combat flow, and flexible ability-driven gameplay.",
+    href: "/second/wizard-combat-movement",
+    imageBackgroundClass: "bg-black",
+    imageAlt: "Wizard Game logo",
+    imageClassName: "object-contain object-center",
+    imageSrc: "/WizardGameLogo.png",
+    tags: [
+      "Combat Design",
+      "Locomotion",
+      "Gameplay Abilities",
+      "GAS",
+      "Multiplayer Framework",
+      "Animation Flow",
+      "Input Handling",
+      "Gameplay Feel",
+      "System Architecture",
+    ],
+    title: "Wizard Game",
   },
 ] as const;
 
@@ -170,15 +217,92 @@ export default function HomePage() {
   return (
     <>
       {/* intor */}
-      <div className="mx-auto max-w-5xl px-4 pt-10 pb-1 md:px-6 md:pt-6">
+      <div className="mx-auto max-w-5xl px-4 pt-10 pb-0 md:px-6 md:pt-6">
        <Intro/>
         
       </div>
 
       {/* intro video */}
-      <div className="mx-auto max-w-5xl px-4 pt-2 pb-4 md:px-6 md:pt-2">
+      <div className="mx-auto max-w-5xl px-4 pt-3 pb-4 md:px-6 md:pt-3">
         <Video videoUrl={heroVideoUrl} outlined />
       </div>
+
+      <section className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 pt-1 pb-5 md:px-6 md:pb-6">
+        <div className="straight-outline bg-white/45 px-6 py-5 backdrop-blur-sm">
+          <p className="mb-2 text-[0.76rem] font-semibold tracking-[0.12em] text-neutral-700/75 uppercase">
+            Studio Projects
+          </p>
+          <h2 className="text-[1.55rem] font-semibold tracking-tight text-neutral-900 md:text-[1.7rem]">
+            Highlighted work from larger real-world game projects.
+          </h2>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {studioProjects.map((project) => {
+            const isExternal = project.href.startsWith("http");
+            const className =
+              "straight-outline bg-white/50 px-5 py-5 backdrop-blur-sm transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#fbf5e8]/95 hover:shadow-[0_10px_22px_rgba(180,156,112,0.12)]";
+
+            const content = (
+              <>
+                <div className={`mb-4 overflow-hidden border border-black/15 ${project.imageBackgroundClass}`}>
+                  <div className="relative aspect-[16/9] w-full">
+                    <Image
+                      src={project.imageSrc}
+                      alt={project.imageAlt}
+                      fill
+                      className={project.imageClassName}
+                    />
+                  </div>
+                </div>
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <h3 className="text-xl font-semibold tracking-tight text-neutral-900">
+                    {project.title}
+                  </h3>
+                  {project.badge ? (
+                    <span className="inline-flex items-center gap-1 border border-[#1b2838]/25 bg-[#1b2838]/8 px-2 py-1 text-[0.68rem] font-semibold tracking-[0.1em] text-[#1b2838] uppercase">
+                      <FaSteam className="h-3 w-3" />
+                      {project.badge}
+                    </span>
+                  ) : null}
+                </div>
+                <p className="mb-4 text-[0.98rem] leading-relaxed text-neutral-700">
+                  {project.description}
+                </p>
+                <p className="mb-2 text-[0.76rem] font-semibold tracking-[0.08em] text-neutral-700/75">
+                  What I worked on in this
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="border border-black/15 bg-white/55 px-2 py-1 text-[0.72rem] font-medium tracking-[0.04em] text-neutral-700"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </>
+            );
+
+            return isExternal ? (
+              <a
+                key={project.title}
+                href={project.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={className}
+              >
+                {content}
+              </a>
+            ) : (
+              <Link key={project.title} href={project.href} className={className}>
+                {content}
+              </Link>
+            );
+          })}
+        </div>
+      </section>
 
       <section className="relative mx-auto flex w-full max-w-5xl flex-col gap-5 px-4 pt-2 pb-1 md:px-6 md:pb-2">
         <svg
