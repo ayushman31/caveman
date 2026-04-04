@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Multiplayer gameplay architecture diagram</title>
+  <desc id="desc">A stylized architecture overview showing gameplay abilities, world systems, replication, and data layers connected in a multiplayer Unreal project.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f3ead8"/>
+      <stop offset="100%" stop-color="#dbe6dd"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <text x="75" y="72" font-family="Arial, sans-serif" font-size="20" letter-spacing="4" fill="#415950">MULTIPLAYER GAMEPLAY ARCHITECTURE</text>
+  <g stroke="#20332c" stroke-width="4" fill="#fffdf8">
+    <rect x="85" y="150" width="280" height="120" rx="18"/>
+    <rect x="460" y="120" width="280" height="140" rx="18"/>
+    <rect x="835" y="150" width="280" height="120" rx="18"/>
+    <rect x="170" y="390" width="280" height="130" rx="18"/>
+    <rect x="750" y="390" width="280" height="130" rx="18"/>
+  </g>
+  <g font-family="Georgia, serif" font-size="31" fill="#15221d" text-anchor="middle">
+    <text x="225" y="215">Gameplay</text>
+    <text x="225" y="250">Abilities</text>
+    <text x="600" y="190">Shared Rule Layer</text>
+    <text x="600" y="225">Attributes · effects</text>
+    <text x="975" y="215">World Systems</text>
+    <text x="975" y="250">Tracking · events</text>
+    <text x="310" y="455">Replication Flow</text>
+    <text x="890" y="455">Data-Driven Content</text>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="19" fill="#48635a" text-anchor="middle">
+    <text x="600" y="510">Abilities, systems, and data stay connected without becoming one-off features.</text>
+  </g>
+  <g stroke="#2d6b5f" stroke-width="6" fill="none" stroke-linecap="round">
+    <path d="M365 210H460"/>
+    <path d="M740 210H835"/>
+    <path d="M280 390L520 260"/>
+    <path d="M920 390L680 260"/>
+  </g>
+  <g fill="#2d6b5f">
+    <path d="M448 200l16 10-16 10z"/>
+    <path d="M823 200l16 10-16 10z"/>
+    <path d="M507 268l22-2-11-18z"/>
+    <path d="M693 268l-22-2 11-18z"/>
+  </g>
+</svg>

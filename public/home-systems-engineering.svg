@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Systems Engineering</title>
+  <desc id="desc">Clean card artwork with one headline, three blocks for territories, packs, and growth, and a lower section showing how the systems connect.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#efe5d6"/>
+      <stop offset="100%" stop-color="#dbe6da"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <text x="80" y="88" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="46" font-weight="600" fill="#223129">Systems Engineering</text>
+
+  <g fill="#fffaf2" stroke="#25352e" stroke-width="4">
+    <rect x="84" y="156" width="320" height="332" rx="22"/>
+    <rect x="440" y="156" width="320" height="332" rx="22"/>
+    <rect x="796" y="156" width="320" height="332" rx="22"/>
+  </g>
+
+  <g font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="22" font-weight="600" fill="#33443a">
+    <text x="116" y="206">Territories</text>
+    <text x="472" y="206">Packs</text>
+    <text x="828" y="206">Growth</text>
+  </g>
+
+  <g transform="translate(116 216)">
+    <g fill="#f4ecdf" stroke="#25352e" stroke-width="4">
+      <path d="M58 18l34 0 18 30-18 30-34 0-18-30z"/>
+      <path d="M144 18l34 0 18 30-18 30-34 0-18-30z"/>
+      <path d="M15 92l34 0 18 30-18 30-34 0-18-30z"/>
+      <path d="M101 92l34 0 18 30-18 30-34 0-18-30z" fill="#d9e8de"/>
+      <path d="M187 92l34 0 18 30-18 30-34 0-18-30z"/>
+      <path d="M58 166l34 0 18 30-18 30-34 0-18-30z"/>
+      <path d="M144 166l34 0 18 30-18 30-34 0-18-30z"/>
+    </g>
+    <g stroke="#2e6b5c" stroke-width="5" fill="none" stroke-linecap="round">
+      <path d="M92 78l18 28" opacity="0.28"/>
+      <path d="M154 78l-18 28" opacity="0.28"/>
+      <path d="M178 78l18 28" opacity="0.28"/>
+      <path d="M58 122h24" opacity="0.28"/>
+      <path d="M144 122h24" opacity="0.28"/>
+      <path d="M92 166l18-28" opacity="0.28"/>
+      <path d="M154 166l-18-28" opacity="0.28"/>
+      <path d="M92 152l18 30" opacity="0.22"/>
+      <path d="M154 152l-18 30" opacity="0.22"/>
+    </g>
+    <circle cx="118" cy="122" r="10" fill="#2e6b5c"/>
+  </g>
+
+  <g transform="translate(456 246)">
+    <g fill="#f4ecdf" stroke="#25352e" stroke-width="4">
+      <circle cx="116" cy="66" r="34"/>
+      <circle cx="56" cy="146" r="26"/>
+      <circle cx="116" cy="186" r="26"/>
+      <circle cx="176" cy="146" r="26"/>
+      <circle cx="244" cy="96" r="28"/>
+    </g>
+    <g stroke="#2e6b5c" stroke-width="5" fill="none" stroke-linecap="round">
+      <path d="M116 100L56 146"/>
+      <path d="M116 100L116 160"/>
+      <path d="M116 100L176 146"/>
+      <path d="M176 146L244 96"/>
+    </g>
+    <circle cx="116" cy="66" r="10" fill="#b67a35"/>
+  </g>
+
+  <g transform="translate(795 232)">
+    <g fill="none" stroke="#25352e" stroke-width="5" stroke-linecap="round">
+      <path d="M34 210V40"/>
+      <path d="M34 210H286"/>
+    </g>
+    <g stroke="#2e6b5c" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M56 176L118 146 180 110 242 62"/>
+    </g>
+    <g fill="#f4ecdf" stroke="#25352e" stroke-width="4">
+      <circle cx="56" cy="176" r="12"/>
+      <circle cx="118" cy="146" r="12"/>
+      <circle cx="180" cy="110" r="12"/>
+      <circle cx="242" cy="62" r="12"/>
+    </g>
+    <g fill="#2e6b5c">
+      <circle cx="56" cy="176" r="6"/>
+      <circle cx="118" cy="146" r="6"/>
+      <circle cx="180" cy="110" r="6"/>
+      <circle cx="242" cy="62" r="6"/>
+    </g>
+  </g>
+
+  <g stroke="#2e6b5c" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M244 488V528" opacity="0.55"/>
+    <path d="M600 488V528" opacity="0.55"/>
+    <path d="M956 488V528" opacity="0.55"/>
+    <path d="M244 528H956" opacity="0.32"/>
+  </g>
+  <g fill="#f4ecdf" stroke="#25352e" stroke-width="4">
+    <circle cx="244" cy="528" r="15"/>
+    <circle cx="600" cy="528" r="15" fill="#d9e8de"/>
+    <circle cx="956" cy="528" r="15"/>
+  </g>
+  <g fill="#2e6b5c">
+    <circle cx="244" cy="528" r="7"/>
+    <circle cx="600" cy="528" r="7"/>
+    <circle cx="956" cy="528" r="7"/>
+  </g>
+  <text x="600" y="566" text-anchor="middle" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="22" font-weight="600" fill="#33443a">Connected gameplay systems</text>
+</svg>

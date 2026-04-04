@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Mover system illustration</title>
+  <desc id="desc">A stylized Unreal Mover graphic showing movement states, directional arcs, and ability-driven locomotion flow.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#efe6d6"/>
+      <stop offset="100%" stop-color="#d7e2e7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <text x="72" y="72" font-family="Arial, sans-serif" font-size="20" letter-spacing="4" fill="#526168">UNREAL MOVEMENT FRAMEWORK</text>
+  <text x="600" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="50" fill="#162128">Mover System</text>
+
+  <g stroke="#21323b" stroke-width="4" fill="#fffaf2">
+    <rect x="135" y="222" width="210" height="110" rx="18"/>
+    <rect x="495" y="210" width="210" height="140" rx="18"/>
+    <rect x="855" y="222" width="210" height="110" rx="18"/>
+    <rect x="360" y="435" width="480" height="118" rx="20" fill="#f5efe2"/>
+  </g>
+
+  <g font-family="Georgia, serif" fill="#172128" text-anchor="middle">
+    <text x="240" y="285" font-size="30">Locomotion</text>
+    <text x="600" y="285" font-size="34">Movement Modes</text>
+    <text x="960" y="285" font-size="30">Abilities</text>
+    <text x="600" y="505" font-size="36">Multiplayer Motion Control</text>
+  </g>
+
+  <g font-family="Arial, sans-serif" fill="#55676d" text-anchor="middle" font-size="20">
+    <text x="240" y="316">grounded, turning, traversal</text>
+    <text x="600" y="318">dash, pounce, custom states</text>
+    <text x="960" y="316">gameplay-driven movement</text>
+    <text x="600" y="540">responsive movement architecture with network-friendly state flow</text>
+  </g>
+
+  <g stroke="#2b6f7f" stroke-width="6" fill="none" stroke-linecap="round">
+    <path d="M345 277H495"/>
+    <path d="M705 277H855"/>
+    <path d="M525 353L450 435"/>
+    <path d="M675 353L750 435"/>
+    <path d="M290 402c80-90 180-120 310-120" opacity="0.55"/>
+    <path d="M910 402c-80-90-180-120-310-120" opacity="0.55"/>
+  </g>
+
+  <g fill="#2b6f7f">
+    <path d="M482 267l16 10-16 10z"/>
+    <path d="M842 267l16 10-16 10z"/>
+    <path d="M439 432l10 16 10-18z"/>
+    <path d="M761 432l-10 16-10-18z"/>
+  </g>
+</svg>

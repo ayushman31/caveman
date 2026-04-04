@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Experimental and Advanced</title>
+  <desc id="desc">Clean abstract graphic for experimental and advanced work with layered framework panels and movement paths.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eee5d6"/>
+      <stop offset="100%" stop-color="#d8e2e7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <g fill="#fffaf2" stroke="#22323a" stroke-width="4">
+    <rect x="170" y="220" width="245" height="150" rx="18"/>
+    <rect x="478" y="168" width="245" height="150" rx="18"/>
+    <rect x="786" y="220" width="245" height="150" rx="18"/>
+  </g>
+  <g fill="none" stroke="#2e6d7a" stroke-width="7" stroke-linecap="round">
+    <path d="M415 295H478"/>
+    <path d="M723 295H786"/>
+    <path d="M252 430c110-28 244-28 355 0" opacity="0.4"/>
+    <path d="M594 430c111-28 245-28 356 0" opacity="0.4"/>
+  </g>
+  <g fill="#2e6d7a">
+    <circle cx="292" cy="295" r="12"/>
+    <circle cx="600" cy="243" r="12"/>
+    <circle cx="908" cy="295" r="12"/>
+  </g>
+  <text x="80" y="88" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="46" font-weight="600" fill="#22323a">Experimental / Advanced</text>
+</svg>

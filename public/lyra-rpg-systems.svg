@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Lyra RPG systems illustration</title>
+  <desc id="desc">A stylized Lyra-inspired systems graphic showing progression, crafting, gathering, and multiplayer architecture connected through a modular framework.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0e8d9"/>
+      <stop offset="100%" stop-color="#d8e5dc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <text x="74" y="72" font-family="Arial, sans-serif" font-size="20" letter-spacing="4" fill="#54685d">LYRA EXTENSION OVERVIEW</text>
+  <text x="600" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="48" fill="#17211d">Lyra RPG Systems</text>
+
+  <g stroke="#26332d" stroke-width="4" fill="#fffaf2">
+    <rect x="112" y="228" width="210" height="112" rx="18"/>
+    <rect x="372" y="228" width="210" height="112" rx="18"/>
+    <rect x="632" y="228" width="210" height="112" rx="18"/>
+    <rect x="892" y="228" width="210" height="112" rx="18"/>
+    <rect x="320" y="438" width="560" height="118" rx="20" fill="#f6f0e4"/>
+  </g>
+
+  <g font-family="Georgia, serif" fill="#17211d" text-anchor="middle">
+    <text x="217" y="292" font-size="28">Progression</text>
+    <text x="477" y="292" font-size="28">Crafting</text>
+    <text x="737" y="292" font-size="28">Gathering</text>
+    <text x="997" y="292" font-size="28">Replication</text>
+    <text x="600" y="506" font-size="36">Modular Gameplay Layer on Lyra</text>
+  </g>
+
+  <g font-family="Arial, sans-serif" fill="#596a62" text-anchor="middle" font-size="19">
+    <text x="217" y="322">growth, skills, stats</text>
+    <text x="477" y="322">stations and recipes</text>
+    <text x="737" y="322">world interactions</text>
+    <text x="997" y="322">target data and authority</text>
+    <text x="600" y="540">connected systems that stay reusable across gameplay and multiplayer flows</text>
+  </g>
+
+  <g stroke="#2f6d5c" stroke-width="6" fill="none" stroke-linecap="round">
+    <path d="M322 284H372"/>
+    <path d="M582 284H632"/>
+    <path d="M842 284H892"/>
+    <path d="M220 340L420 438"/>
+    <path d="M480 340L540 438"/>
+    <path d="M720 340L660 438"/>
+    <path d="M980 340L780 438"/>
+  </g>
+
+  <g fill="#2f6d5c">
+    <path d="M360 274l16 10-16 10z"/>
+    <path d="M620 274l16 10-16 10z"/>
+    <path d="M880 274l16 10-16 10z"/>
+  </g>
+</svg>

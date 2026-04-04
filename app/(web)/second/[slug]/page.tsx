@@ -5,12 +5,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 const wizardFeatureVideos = {
-  combat: null,
-  movement: null,
+  showcase: "https://youtu.be/qYhhpC9uRH8",
 } as const;
 
 const pounceFeatureVideos = {
-  showcase: null,
+  latch: "https://youtu.be/9U3LpaSTVzI",
+  pin: "https://youtu.be/MvevjpPdypA",
 } as const;
 
 const renderVerticalArrowCue = (label: string) => (
@@ -148,8 +148,6 @@ export default async function SecondFeaturePage({
             </div>
           </div>
 
-          {renderVideoSlot("Movement Video", wizardFeatureVideos.movement)}
-
           <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
             <h2 className="mb-6 text-2xl font-semibold tracking-tight text-neutral-900">
               Combat
@@ -198,8 +196,8 @@ export default async function SecondFeaturePage({
           </div>
 
           {renderVideoSlot(
-            "Combat Video",
-            wizardFeatureVideos.combat,
+            "Showcase",
+            wizardFeatureVideos.showcase,
             "more stuff",
           )}
 
@@ -408,7 +406,26 @@ export default async function SecondFeaturePage({
             </div>
           </div>
 
-          {renderVideoSlot("Pounce & Latch Video", pounceFeatureVideos.showcase, "more stuff")}
+          {renderVideoSlot(
+            "Pounce to Latch",
+            pounceFeatureVideos.latch,
+            "showcase",
+          )}
+
+          <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
+            <h2 className="mb-4 text-2xl font-semibold tracking-tight text-neutral-900">
+              Weight and growth outcome
+            </h2>
+            <p className="text-[1.02rem] leading-relaxed text-neutral-700 md:text-[1.08rem]">
+              Both examples use the same base creature, so the branch is driven
+              by growth-based weight difference rather than a different class.
+              A lighter Achillobator pouncing a heavier one resolves into a
+              latch, while a heavier Achillobator pouncing a lighter one
+              resolves into a pin.
+            </p>
+          </div>
+
+          {renderVideoSlot("Pounce to Pin", pounceFeatureVideos.pin)}
 
           <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
             <h2 className="mb-6 text-2xl font-semibold tracking-tight text-neutral-900">

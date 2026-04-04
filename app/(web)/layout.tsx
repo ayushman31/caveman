@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FaYoutube, FaDiscord } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaEnvelope, FaXTwitter } from "react-icons/fa6";
 
 
 export const metadata: Metadata = {
@@ -24,12 +24,22 @@ export default function WebLayout({
         </span>
         <ul className="flex items-center gap-6 text-sm font-medium text-neutral-600">
           <li>
+            <a
+              href="mailto:anshumans09@hotmail.com"
+              className="transition-colors hover:text-orange-600"
+              aria-label="Email Anshuman Singh"
+            >
+              <FaEnvelope className="h-5 w-5" />
+            </a>
+          </li>
+          <li>
             {/* YouTube Icon */}
             <a
               href="https://www.youtube.com/@anshumansingh9794"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-red-600 transition-colors"
+              aria-label="Open YouTube profile"
             >
               <FaYoutube className="h-6 w-6" />
             </a>
@@ -41,6 +51,7 @@ export default function WebLayout({
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-black transition-colors"
+              aria-label="Open X profile"
             >
               <FaXTwitter className="h-6 w-6" />
             </a>
@@ -48,10 +59,11 @@ export default function WebLayout({
           <li>
             {/* Discord Icon */}
             <a
-              href="YOUR_DISCORD_LINK"
+              href="https://discord.gg/Pdcx3pfbfb"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-indigo-600 transition-colors"
+              aria-label="Open Discord invite"
             >
               <FaDiscord className="h-6 w-6" />
             </a>

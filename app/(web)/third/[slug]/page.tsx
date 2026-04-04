@@ -1,6 +1,11 @@
 import PageIntro from "@/components/PageIntro";
+import Video from "@/components/Video";
 import { categoryPages, getCategoryFeature } from "@/lib/categoryContent";
 import { notFound } from "next/navigation";
+
+const footprintFeatureVideos = {
+  showcase: "https://www.youtube.com/watch?v=gvTY96CtRFc",
+} as const;
 
 const footprintSystemComponents = [
   {
@@ -91,6 +96,13 @@ export default async function ThirdFeaturePage({
               and a world subsystem that decides which nearby clients should be
               notified when new footprints appear.
             </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <h2 className="text-2xl font-semibold tracking-tight text-neutral-900">
+              Showcase
+            </h2>
+            <Video videoUrl={footprintFeatureVideos.showcase} outlined />
           </div>
 
           <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">

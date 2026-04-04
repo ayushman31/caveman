@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Unreal network replication diagram</title>
+  <desc id="desc">A stylized multiplayer replication illustration with a server node broadcasting replicated state to connected clients.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f6efe4"/>
+      <stop offset="100%" stop-color="#d6e3e8"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#e7eef0" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <g opacity="0.35" stroke="#35515a" stroke-width="2" fill="none">
+    <path d="M60 110h1080"/>
+    <path d="M80 190h1040"/>
+    <path d="M60 565h1080"/>
+  </g>
+  <rect x="435" y="180" width="330" height="180" rx="18" fill="url(#panel)" stroke="#21333a" stroke-width="4"/>
+  <text x="600" y="236" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#142126">Authority Server</text>
+  <text x="600" y="282" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#39535c">RPC routing · relevancy · state ownership</text>
+  <g fill="#1b5962">
+    <circle cx="520" cy="319" r="10"/>
+    <circle cx="600" cy="319" r="10"/>
+    <circle cx="680" cy="319" r="10"/>
+  </g>
+  <g>
+    <rect x="120" y="440" width="220" height="110" rx="16" fill="#fffaf2" stroke="#21333a" stroke-width="4"/>
+    <rect x="490" y="440" width="220" height="110" rx="16" fill="#fffaf2" stroke="#21333a" stroke-width="4"/>
+    <rect x="860" y="440" width="220" height="110" rx="16" fill="#fffaf2" stroke="#21333a" stroke-width="4"/>
+    <text x="230" y="490" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#142126">Client A</text>
+    <text x="600" y="490" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#142126">Client B</text>
+    <text x="970" y="490" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#142126">Client C</text>
+    <text x="230" y="525" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#39535c">nearby actor data</text>
+    <text x="600" y="525" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#39535c">filtered events</text>
+    <text x="970" y="525" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#39535c">visual state only</text>
+  </g>
+  <g stroke="#1b5962" stroke-width="6" fill="none" stroke-linecap="round">
+    <path d="M520 360L230 440"/>
+    <path d="M600 360L600 440"/>
+    <path d="M680 360L970 440"/>
+  </g>
+  <g fill="#1b5962">
+    <path d="M239 427l-20 7 15 14z"/>
+    <path d="M610 420l-10 18-10-18z"/>
+    <path d="M959 427l20 7-15 14z"/>
+  </g>
+  <text x="74" y="72" font-family="Arial, sans-serif" font-size="20" letter-spacing="4" fill="#39535c">UNREAL MULTIPLAYER REPLICATION</text>
+</svg>

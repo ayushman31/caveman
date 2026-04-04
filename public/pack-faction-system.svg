@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Pack and faction system illustration</title>
+  <desc id="desc">A stylized diagram showing a pack leader, grouped members, leadership challenge flow, and minimap style coordination markers.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#efe3cf"/>
+      <stop offset="100%" stop-color="#d7e4d6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <text x="76" y="72" font-family="Arial, sans-serif" font-size="20" letter-spacing="4" fill="#4f5d4c">PACKS, LEADERSHIP, AND MAP COORDINATION</text>
+
+  <g fill="none" stroke="#2c3b2e" stroke-width="4">
+    <circle cx="335" cy="340" r="170" />
+    <circle cx="865" cy="340" r="145" />
+  </g>
+
+  <g>
+    <circle cx="335" cy="260" r="42" fill="#b67a35" stroke="#2c3b2e" stroke-width="4"/>
+    <text x="335" y="268" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#fffaf2">LEAD</text>
+
+    <circle cx="240" cy="365" r="34" fill="#f9f4e8" stroke="#2c3b2e" stroke-width="4"/>
+    <circle cx="335" cy="425" r="34" fill="#f9f4e8" stroke="#2c3b2e" stroke-width="4"/>
+    <circle cx="430" cy="355" r="34" fill="#f9f4e8" stroke="#2c3b2e" stroke-width="4"/>
+    <circle cx="285" cy="180" r="28" fill="#f9f4e8" stroke="#2c3b2e" stroke-width="4"/>
+    <circle cx="390" cy="185" r="28" fill="#f9f4e8" stroke="#2c3b2e" stroke-width="4"/>
+  </g>
+
+  <g stroke="#2f6b58" stroke-width="5" stroke-linecap="round" fill="none">
+    <path d="M335 302L240 365"/>
+    <path d="M335 302L335 391"/>
+    <path d="M335 302L430 355"/>
+    <path d="M335 225L285 180"/>
+    <path d="M335 225L390 185"/>
+  </g>
+
+  <g>
+    <rect x="720" y="180" width="290" height="220" rx="18" fill="#fffaf2" stroke="#2c3b2e" stroke-width="4"/>
+    <text x="865" y="228" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#172019">Pack Map</text>
+    <g fill="#2f6b58">
+      <circle cx="810" cy="285" r="11"/>
+      <circle cx="878" cy="254" r="11"/>
+      <circle cx="926" cy="322" r="11"/>
+      <circle cx="820" cy="345" r="11"/>
+      <circle cx="905" cy="370" r="11"/>
+    </g>
+    <g stroke="#2c3b2e" stroke-width="2" opacity="0.6">
+      <path d="M795 300l55-30 62 54" fill="none"/>
+      <path d="M810 345l85 25" fill="none"/>
+    </g>
+    <text x="865" y="434" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#556758">member visibility on minimap and world map</text>
+  </g>
+
+  <g>
+    <rect x="446" y="286" width="220" height="108" rx="16" fill="#fffaf2" stroke="#2c3b2e" stroke-width="4"/>
+    <text x="556" y="328" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#172019">Leadership</text>
+    <text x="556" y="362" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#556758">challenge and struggle flow</text>
+  </g>
+
+  <g stroke="#b67a35" stroke-width="6" stroke-linecap="round" fill="none">
+    <path d="M505 280l-62-44"/>
+    <path d="M665 336h44"/>
+  </g>
+  <g fill="#b67a35">
+    <path d="M451 229l-18 1 9 15z"/>
+    <path d="M718 327l-15 10 15 10z"/>
+  </g>
+</svg>

@@ -27,7 +27,7 @@ export default function Intro() {
             strokeLinejoin="miter"
           />
         </svg>
-        <div className="w-full md:w-[40%]">
+        <div className="w-full md:w-[33%]">
           <div className="segmented-frame rounded-none">
             <Image
               src="/caveman.jpg"
@@ -45,7 +45,7 @@ export default function Intro() {
           </div>
         </div>
   
-        <div className="flex w-full max-w-2xl flex-col md:w-[60%]">
+        <div className="flex w-full max-w-3xl flex-col md:w-[67%]">
           <h2 className="text-hollow mb-2 font-display text-4xl font-semibold leading-none tracking-tight">
             Unreal Engine Systems Programmer
           </h2>

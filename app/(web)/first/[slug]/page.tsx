@@ -4,13 +4,15 @@ import { categoryPages, getCategoryFeature } from "@/lib/categoryContent";
 import { notFound } from "next/navigation";
 
 const territoryFeatureVideos = {
-  brushTool: null,
-  showcase: null,
+  brushTool: "https://youtu.be/K6m8qFo6kBg",
+  showcase: "https://youtu.be/b_Gtu5fJeIs",
+  worldMap: "https://youtu.be/JQMHRbODIFI",
 } as const;
 
 const growthFeatureVideos = {
-  physicalScaling: null,
-  systemsClip: null,
+  applicationScaling: "https://youtu.be/1GuvIZdjABE",
+  physicalScaling: "https://youtu.be/0PpBRb7ahRw",
+  showcase: "https://youtu.be/-raR3aQcT50",
 } as const;
 
 const packFeatureVideos = {
@@ -498,6 +500,24 @@ export default async function FirstFeaturePage({
             ))}
           </div>
 
+          <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
+            <h2 className="mb-4 text-2xl font-semibold tracking-tight text-neutral-900">
+              Dynamic World Map Rendering
+            </h2>
+            <p className="text-[1.02rem] leading-relaxed text-neutral-700 md:text-[1.08rem]">
+              Territory shapes on the world map are rendered dynamically from the
+              real territory data placed in the game world. That means designers
+              can create any territory shape they want with the brush tool, and
+              the map automatically builds the matching interactable territory
+              buttons from that live structure.
+            </p>
+          </div>
+
+          {renderVideoSlot(
+            "Dynamic World Map Demo",
+            territoryFeatureVideos.worldMap,
+          )}
+
           {renderVideoSlot(
             "Territory Showcase",
             territoryFeatureVideos.showcase,
@@ -554,10 +574,6 @@ export default async function FirstFeaturePage({
 
       {slug === "growth-system" ? (
         <section className="relative mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8 md:px-6 md:py-12">
-          <div className="absolute top-8 right-[-3.5rem] hidden lg:block xl:right-[-5rem]">
-            {renderVerticalArrowCue("showcase")}
-          </div>
-
           <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
             <p className="text-[1.02rem] leading-relaxed text-neutral-700 md:text-[1.08rem]">
               It&apos;s used in games like &apos;The Isle&apos; which is a multiplayer game where you
@@ -565,6 +581,8 @@ export default async function FirstFeaturePage({
               a small hatchling to a fully grown adult.
             </p>
           </div>
+
+          {renderVideoSlot("Growth Showcase", growthFeatureVideos.showcase)}
 
           <div className="straight-outline bg-white/45 px-6 py-6 backdrop-blur-sm">
             <h2 className="mb-4 text-2xl font-semibold tracking-tight text-neutral-900">
@@ -656,7 +674,7 @@ export default async function FirstFeaturePage({
           </div>
 
           {renderVideoSlot(
-            "Physical Scaling Demo",
+            "Capsule Scaling Demo",
             growthFeatureVideos.physicalScaling,
             "more stuff",
           )}
@@ -698,11 +716,11 @@ export default async function FirstFeaturePage({
 
             <div className="flex flex-col gap-3 self-start">
               <h3 className="text-lg font-semibold tracking-tight text-neutral-900">
-                Systems Clip
+                Attack Trace Scaling Demo
               </h3>
-              {growthFeatureVideos.systemsClip ? (
+              {growthFeatureVideos.applicationScaling ? (
                 <div className="max-w-full">
-                  <Video videoUrl={growthFeatureVideos.systemsClip} outlined />
+                  <Video videoUrl={growthFeatureVideos.applicationScaling} outlined />
                 </div>
               ) : (
                 <div className="straight-outline straight-outline-video relative w-full overflow-hidden pt-[56.25%] bg-white/35">
