@@ -67,7 +67,7 @@ export default function Intro() {
         </p>
       </div>
 
-      <div className="straight-outline [--outline-color:#d8c8ba] [--outline-thickness:0.05px] bg-[#fbf6ef] px-6 pt-7 pb-5 backdrop-blur-sm md:px-7 md:pt-7 md:pb-5">
+      <div className="straight-outline [--outline-color:#000] [--outline-thickness:0.05px] bg-[#fbf6ef] px-6 pt-7 pb-3 backdrop-blur-sm md:px-7 md:pt-7 md:pb-3">
         <h2
           className={`${boldonse.className} text-4xl leading-none tracking-tight text-[#8a6a55] md:text-[2.8rem]`}
           style={{ WebkitTextStroke: "0.7px #000" }}
@@ -75,33 +75,33 @@ export default function Intro() {
           Unreal Engine Systems Programmer
         </h2>
 
-        <div className="mt-6 grid gap-5 border-t border-[#d8c8b6]/80 pt-6 md:grid-cols-[minmax(0,0.26fr)_minmax(0,0.74fr)] md:items-stretch md:gap-6">
-          <div className="w-full max-w-[14rem] md:max-w-none md:pt-4">
+        <div className="mt-6 grid gap-5 border-t border-[#d8c8b6]/80 pt-6 md:grid-cols-[minmax(0,0.17fr)_minmax(0,0.83fr)] md:items-stretch md:gap-5">
+          <div className="w-full max-w-[10rem] md:-mt-3 md:max-w-none md:pt-4">
             <div className="segmented-frame rounded-none">
               <Image
-                src="/cavemanbutcooler.png"
+                src="/cavemanbutboring.jpg"
                 alt="Profile photo"
-                width={800}
-                height={800}
+                width={1280}
+                height={1600}
                 unoptimized
-                className="relative z-0 block aspect-square w-full rounded-none object-cover"
+                className="relative z-0 block aspect-[5/6] w-full rounded-none object-cover object-center"
               />
-              <div className="pointer-events-none absolute top-2 left-3 z-10">
-                <span className="border border-black/80 bg-[#f4f1eb]/68 px-2.5 py-0.5 text-[0.68rem] font-medium tracking-[0.18em] text-neutral-900 uppercase backdrop-blur-[2px]">
+              <div className="pointer-events-none absolute top-0 left-1.5 z-10 -translate-y-px">
+                <span className="border border-black/80 bg-[#f4f1eb]/68 px-1.5 py-px text-[0.56rem] font-medium tracking-[0.14em] text-neutral-900 uppercase backdrop-blur-[2px]">
                   Anshuman Singh
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col justify-center bg-[#fbf6ef] px-6 py-5 md:px-7 md:py-5">
+          <div className="flex flex-col justify-center bg-[#fbf6ef] px-6 py-5 md:-mt-2 md:px-7 md:py-5">
             <p className="text-[1.2rem] leading-[1.42] text-neutral-900 md:text-[1.32rem]">
               I love working on systems-heavy gameplay: gameplay architecture,
               GAS, replication, data-driven design, and polished mechanics
               that feel good to play while still scaling cleanly under the
               hood.
             </p>
-            <ul className="mt-3 grid list-disc gap-x-6 gap-y-1 pl-5 text-[0.9rem] leading-[1.45] text-neutral-700 md:grid-cols-2 md:text-[0.95rem]">
+            <ul className="mt-3 grid list-disc gap-x-6 gap-y-1 pl-5 text-[0.9rem] leading-[1.45] text-neutral-700 md:text-[0.95rem] lg:grid-cols-2">
               {skillBullets.map((skill) => (
                 <li key={skill}>{skill}</li>
               ))}
